@@ -30,8 +30,10 @@ input{font:inherit;padding:.55em .8em;border-radius:10px;border:2px solid var(--
 .cube.spin{animation:spin 18s linear infinite;transition:none}
 .cube.spin .c{pointer-events:none}
 @keyframes spin{from{transform:scale(.76) rotate3d(1,1,.3,0deg)}to{transform:scale(.76) rotate3d(1,1,.3,360deg)}}
-.face{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);gap:6px;padding:8px;background:linear-gradient(160deg,#133a78,#0a2250);border:3px solid var(--cy);border-radius:14px;backface-visibility:hidden;box-shadow:inset 0 0 30px #35e0ff55}
+.face{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);gap:6px;padding:32px 8px 8px;background:linear-gradient(160deg,#133a78,#0a2250);border:3px solid var(--cy);border-radius:14px;backface-visibility:hidden;box-shadow:inset 0 0 30px #35e0ff55}
 .face::before{content:attr(data-l);position:absolute;inset:0;display:grid;place-items:center;font:700 6rem Fredoka;color:#35e0ff18;pointer-events:none}
+.tag{position:absolute;top:5px;left:0;right:0;text-align:center;font:700 1.05rem Fredoka;letter-spacing:3px;color:var(--cy);pointer-events:none}
+.dots .bad{background:var(--r);border-color:var(--r)}
 .f0{transform:translateZ(var(--h))}.f1{transform:rotateY(90deg) translateZ(var(--h))}.f2{transform:rotateY(180deg) translateZ(var(--h))}
 .f3{transform:rotateY(-90deg) translateZ(var(--h))}.f4{transform:rotateX(90deg) translateZ(var(--h))}.f5{transform:rotateX(-90deg) translateZ(var(--h))}
 .c{position:relative;background:#1c5fd0;color:#fff;border:2px solid var(--cy);border-radius:10px;padding:0;box-shadow:none;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 1.5rem Fredoka;min-width:0}
@@ -59,13 +61,15 @@ const PIN='1234', TARGET=3;   /* PIN guru dan jumlah soal wajib per murid */
 const POIN_BENAR=33.33333, POTONGAN_SALAH=0;   /* skor = benar x POIN_BENAR - salah x POTONGAN_SALAH (isi POTONGAN_SALAH bila salah ingin mengurangi skor) */
 const NAMES=['Amira','Fani','Arya','Azbi','Fadel','Indrika','Agus','Bilal','Fathir','Farid','Niswa','Aqila','Aafiyah','Amelia','Daffa','Saheer','Aminah','Ummu'];
 /* ===== 54 SOAL: [kode, soal, [kunci...]] ===== */
-const QD=[["A1", "Hasil dari 1/3 × 2/5 adalah ...", ["2/15"]], ["A2", "Bentuk persen dari 3/10 adalah ... %", ["30"]], ["A3", "Bentuk pecahan biasa dari 45% adalah ... / 100", ["45"]], ["A4", "Bentuk desimal dari 7/10 adalah ...", ["0,7"]], ["A5", "Bentuk pecahan biasa dari 0,6 adalah ... / 10", ["6"]], ["A6", "Bentuk persen dari 0,25 adalah ... %", ["25"]], ["A7", "Bentuk desimal dari 80% adalah ...", ["0,8"]], ["A8", "Hasil dari 3/4 × 1/2 adalah ...", ["3/8"]], ["A9", "Bentuk persen dari 12/100 adalah ... %", ["12"]], ["B1", "Bentuk pecahan biasa dari 15% adalah ... / 100", ["15"]], ["B2", "Bentuk desimal dari 9/100 adalah ...", ["0,09"]], ["B3", "Bentuk pecahan biasa dari 0,37 adalah ... / 100", ["37"]], ["B4", "Bentuk persen dari 0,4 adalah ... %", ["40"]], ["B5", "Bentuk desimal dari 6% adalah ...", ["0,06"]], ["B6", "Hasil dari 2/7 × 3/5 adalah ...", ["6/35"]], ["B7", "Bentuk persen dari 17/100 adalah ... %", ["17"]], ["B8", "Bentuk pecahan biasa dari 90% adalah ... / 100", ["90"]], ["B9", "Bentuk desimal dari 3/5 adalah ... / 10", ["0,6", "6"]], ["C1", "Bentuk pecahan biasa dari 0,08 adalah ... / 100", ["8"]], ["C2", "Bentuk persen dari 0,85 adalah ... %", ["85"]], ["C3", "Bentuk desimal dari 12% adalah ...", ["0,12"]], ["C4", "Hasil dari 4/5 × 2/3 adalah ...", ["8/15"]], ["C5", "Bentuk persen dari 6/10 adalah ... %", ["60"]], ["C6", "Bentuk pecahan biasa dari 73% adalah ... / 100", ["73"]], ["C7", "Bentuk desimal dari 4/100 adalah ...", ["0,04"]], ["C8", "Bentuk pecahan biasa dari 0,9 adalah ... / 10", ["9"]], ["C9", "Bentuk persen dari 0,03 adalah ... %", ["3"]], ["D1", "Bentuk desimal dari 50% adalah ...", ["0,5"]], ["D2", "Hasil dari 1/6 × 5/7 adalah ...", ["5/42"]], ["D3", "Bentuk persen dari 21/100 adalah ... %", ["21"]], ["D4", "Bentuk pecahan biasa dari 8% adalah ... / 100", ["8"]], ["D5", "Bentuk desimal dari 1/2 adalah ... / 10", ["0,5", "5"]], ["D6", "Bentuk pecahan biasa dari 0,54 adalah ... / 100", ["54"]], ["D7", "Bentuk persen dari 0,7 adalah ... %", ["70"]], ["D8", "Bentuk desimal dari 35% adalah ...", ["0,35"]], ["D9", "Hasil dari 3/8 × 3/4 adalah ...", ["9/32"]], ["E1", "Bentuk persen dari 8/10 adalah ... %", ["80"]], ["E2", "Bentuk pecahan biasa dari 62% adalah ... / 100", ["62"]], ["E3", "Bentuk desimal dari 15/100 adalah ...", ["0,15"]], ["E4", "Bentuk pecahan biasa dari 0,3 adalah ... / 10", ["3"]], ["E5", "Bentuk persen dari 0,19 adalah ... %", ["19"]], ["E6", "Bentuk desimal dari 99% adalah ...", ["0,99"]], ["E7", "Hasil dari 2/9 × 4/5 adalah ...", ["8/45"]], ["E8", "Bentuk persen dari 41/100 adalah ... %", ["41"]], ["E9", "Bentuk pecahan biasa dari 5% adalah ... / 100", ["5"]], ["F1", "Bentuk desimal dari 4/5 adalah ... / 10", ["0,8", "8"]], ["F2", "Bentuk pecahan biasa dari 0,81 adalah ... / 100", ["81"]], ["F3", "Bentuk persen dari 0,6 adalah ... %", ["60"]], ["F4", "Bentuk desimal dari 7% adalah ...", ["0,07"]], ["F5", "Hasil dari 5/6 × 1/3 adalah ...", ["5/18"]], ["F6", "Bentuk persen dari 5/10 adalah ... %", ["50"]], ["F7", "Bentuk pecahan biasa dari 33% adalah ... / 100", ["33"]], ["F8", "Bentuk desimal dari 68/100 adalah ...", ["0,68"]], ["F9", "Bentuk pecahan biasa dari 0,07 adalah ... / 100", ["7"]]];
+const QD=[["A1", "Hasil dari 1/3 × 2/5 adalah ...", ["2/15"]], ["A2", "Bentuk persen dari 3/10 adalah ...", ["30"]], ["A3", "Bentuk pecahan biasa dari 45% adalah ...", ["45", "45/100"]], ["A4", "Bentuk desimal dari 7/10 adalah ...", ["0,7"]], ["A5", "Bentuk pecahan biasa dari 0,6 adalah ...", ["6", "6/10"]], ["A6", "Bentuk persen dari 0,25 adalah ...", ["25"]], ["A7", "Bentuk desimal dari 80% adalah ...", ["0,8"]], ["A8", "Hasil dari 3/4 × 1/2 adalah ...", ["3/8"]], ["A9", "Bentuk persen dari 12/100 adalah ...", ["12"]], ["B1", "Bentuk pecahan biasa dari 15% adalah ...", ["15", "15/100"]], ["B2", "Bentuk desimal dari 9/100 adalah ...", ["0,09"]], ["B3", "Bentuk pecahan biasa dari 0,37 adalah ...", ["37", "37/100"]], ["B4", "Bentuk persen dari 0,4 adalah ...", ["40"]], ["B5", "Bentuk desimal dari 6% adalah ...", ["0,06"]], ["B6", "Hasil dari 2/7 × 3/5 adalah ...", ["6/35"]], ["B7", "Bentuk persen dari 17/100 adalah ...", ["17"]], ["B8", "Bentuk pecahan biasa dari 90% adalah ...", ["90", "90/100"]], ["B9", "Bentuk desimal dari 3/5 adalah ...", ["0,6"]], ["C1", "Bentuk pecahan biasa dari 0,08 adalah ...", ["8", "8/100"]], ["C2", "Bentuk persen dari 0,85 adalah ...", ["85"]], ["C3", "Bentuk desimal dari 12% adalah ...", ["0,12"]], ["C4", "Hasil dari 4/5 × 2/3 adalah ...", ["8/15"]], ["C5", "Bentuk persen dari 6/10 adalah ...", ["60"]], ["C6", "Bentuk pecahan biasa dari 73% adalah ...", ["73", "73/100"]], ["C7", "Bentuk desimal dari 4/100 adalah ...", ["0,04"]], ["C8", "Bentuk pecahan biasa dari 0,9 adalah ...", ["9", "9/10"]], ["C9", "Bentuk persen dari 0,03 adalah ...", ["3"]], ["D1", "Bentuk desimal dari 50% adalah ...", ["0,5"]], ["D2", "Hasil dari 1/6 × 5/7 adalah ...", ["5/42"]], ["D3", "Bentuk persen dari 21/100 adalah ...", ["21"]], ["D4", "Bentuk pecahan biasa dari 8% adalah ...", ["8", "8/100"]], ["D5", "Bentuk desimal dari 1/2 adalah ...", ["0,5"]], ["D6", "Bentuk pecahan biasa dari 0,54 adalah ...", ["54", "54/100"]], ["D7", "Bentuk persen dari 0,7 adalah ...", ["70"]], ["D8", "Bentuk desimal dari 35% adalah ...", ["0,35"]], ["D9", "Hasil dari 3/8 × 3/4 adalah ...", ["9/32"]], ["E1", "Bentuk persen dari 8/10 adalah ...", ["80"]], ["E2", "Bentuk pecahan biasa dari 62% adalah ...", ["62", "62/100"]], ["E3", "Bentuk desimal dari 15/100 adalah ...", ["0,15"]], ["E4", "Bentuk pecahan biasa dari 0,3 adalah ...", ["3", "3/10"]], ["E5", "Bentuk persen dari 0,19 adalah ...", ["19"]], ["E6", "Bentuk desimal dari 99% adalah ...", ["0,99"]], ["E7", "Hasil dari 2/9 × 4/5 adalah ...", ["8/45"]], ["E8", "Bentuk persen dari 41/100 adalah ...", ["41"]], ["E9", "Bentuk pecahan biasa dari 5% adalah ...", ["5", "5/100"]], ["F1", "Bentuk desimal dari 4/5 adalah ...", ["0,8"]], ["F2", "Bentuk pecahan biasa dari 0,81 adalah ...", ["81", "81/100"]], ["F3", "Bentuk persen dari 0,6 adalah ...", ["60"]], ["F4", "Bentuk desimal dari 7% adalah ...", ["0,07"]], ["F5", "Hasil dari 5/6 × 1/3 adalah ...", ["5/18"]], ["F6", "Bentuk persen dari 5/10 adalah ...", ["50"]], ["F7", "Bentuk pecahan biasa dari 33% adalah ...", ["33", "33/100"]], ["F8", "Bentuk desimal dari 68/100 adalah ...", ["0,68"]], ["F9", "Bentuk pecahan biasa dari 0,07 adalah ...", ["7", "7/100"]]];
 
 /*PURE-START*/
 const Q={};QD.forEach(([id,t,a])=>Q[id]={t,a});
 const IDS=QD.map(x=>x[0]);
 const nm=sid=>NAMES[+String(sid).slice(1)-1]||sid;
 const doneOf=(st,sid)=>Object.values(st.q||{}).filter(x=>x.sol===sid).length;
+const wrongOf=(st,sid)=>Object.values(st.q||{}).filter(x=>x.x&&x.x[sid]).length;
+const usedOf=(st,sid)=>doneOf(st,sid)+wrongOf(st,sid);   /* kesempatan terpakai = soal benar + soal salah */
 function parseN(s){s=String(s).trim().replace(/\s+/g,'').replace('%','').replace(',','.');let m=s.match(/^(\d+)\/(\d+)$/);
  if(m)return +m[2]?{n:+m[1],d:+m[2]}:null;return /^\d+(\.\d+)?$/.test(s)?{v:parseFloat(s)}:null}
 function grade(id,inp){const A=parseN(inp);if(!A)return false;
@@ -73,7 +77,7 @@ function grade(id,inp){const A=parseN(inp);if(!A)return false;
 const fail=(res,m)=>{res.msg=m;return false};
 const pickFn=(id,me)=>(c,res)=>{
  if(c.cur[me])return fail(res,'Selesaikan dulu soal '+c.cur[me]+' yang sedang kamu kerjakan.');
- if(doneOf(c,me)>=TARGET)return fail(res,'Kamu sudah menyelesaikan '+TARGET+' soal.');
+ if(usedOf(c,me)>=TARGET)return fail(res,'Ketiga kesempatanmu sudah terpakai.');
  const q=c.q[id]=c.q[id]||{};
  if(q.sol)return fail(res,'Soal '+id+' sudah diselesaikan '+nm(q.sol)+'.');
  if(q.by)return fail(res,'Soal '+id+' sedang dikerjakan '+nm(q.by)+'.');
@@ -87,6 +91,7 @@ const releaseFn=me=>(c,res)=>{const id=c.cur[me];if(id&&c.q[id])delete c.q[id].b
 /*PURE-END*/
 
 const $=id=>document.getElementById(id);
+const fmt=x=>Math.round(x*10)/10;
 const fx=s=>s.replace(/(\d+)\/(\d+)/g,'<span class="fr"><i>$1</i><i>$2</i></span>').replace(/\.\.\./g,'<span class="bl"></span>');
 let S={q:{},cur:{}},me=sessionStorage.getItem('ev_me'),guru=sessionStorage.getItem('ev_g')==='1',ref=null,face=-1,pk='',online=false;
 const LET='ABCDEF',ROT=['rotateY(0deg)','rotateY(-90deg)','rotateY(-180deg)','rotateY(90deg)','rotateX(-90deg)','rotateX(90deg)'];
@@ -120,9 +125,9 @@ function render(){
   <div class="panel"><div class="row"><b>Guru:</b><input id="pin" type="password" placeholder="PIN" inputmode="numeric" style="width:110px"><button class="cy" id="gl">Masuk</button></div></div>`;
   a.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{me=b.dataset.s;sessionStorage.setItem('ev_me',me);render()});
   $('gl').onclick=()=>{if($('pin').value===PIN){guru=true;sessionStorage.setItem('ev_g','1');render()}else $('pin').value=''};return}
- a.innerHTML=`<div class="top"><h1>${nm(me)} <small>Dadu Evaluasi · kerjakan ${TARGET} soal</small></h1>
+ a.innerHTML=`<div class="top"><h1>${nm(me)} <small>Dadu Evaluasi · ${TARGET} kesempatan</small></h1>
   <div class="row"><div class="dots" id="dots"></div><button class="ghost" id="out">Ganti nama</button></div></div>
-  <div class="scene"><div class="cube spin" id="cube">${[0,1,2,3,4,5].map(f=>`<div class="face f${f}" data-l="${LET[f]}">${[1,2,3,4,5,6,7,8,9].map(n=>{const id=LET[f]+n;return `<button class="c" id="c-${id}" data-id="${id}"><b>${n}</b><i></i></button>`}).join('')}</div>`).join('')}</div></div>
+  <div class="scene"><div class="cube spin" id="cube">${[0,1,2,3,4,5].map(f=>`<div class="face f${f}" data-l="${LET[f]}"><span class="tag">SISI ${LET[f]}</span>${[1,2,3,4,5,6,7,8,9].map(n=>{const id=LET[f]+n;return `<button class="c" id="c-${id}" data-id="${id}"><b>${n}</b><i></i></button>`}).join('')}</div>`).join('')}</div></div>
   <div class="row fb" style="justify-content:center"><b>Sisi:</b>${[0,1,2,3,4,5].map(f=>`<button data-f="${f}">${LET[f]}</button>`).join('')}<button class="ghost" id="roll">🎲 Putar</button></div>
   <div id="msg"></div><div id="panel"></div>
   <p class="meta">🔥 = soal salah, boleh direbut · ⛔ = kamu sudah salah di soal ini · 🔒 nama = sedang dikerjakan · ✓ = selesai</p>`;
@@ -137,30 +142,29 @@ function pick(id){id=String(id).trim().toUpperCase();if(!Q[id]){say('Kode tidak 
  if(id[0]!==LET[face]&&face>=0||face<0)setFace(LET.indexOf(id[0]));
  tx(pickFn(id,me),r=>{if(r.msg)say(r.msg);else say('Soal '+id+' milikmu. Selesaikan dulu sebelum memilih yang lain.',1)})}
 function submit(){const id=S.cur[me],v=$('ans').value.trim();if(!id)return;if(!v){say('Isi jawaban dulu.');return}
- const ok=grade(id,v);
- tx(answerFn(id,me,ok),r=>{if(r.msg)say(r.msg);else if(r.ok){playFile('ok');say('✅ Benar! Soal '+id+' selesai.',1)}else{playFile('no');say('❌ Belum tepat. Soal '+id+' dilepas dan bisa direbut temanmu. Pilih soal lain.')}})}
+ const ok=grade(id,v),left=TARGET-usedOf(S,me)-1,sisa=left>0?' Sisa kesempatan: '+left+'.':' Kesempatanmu sudah habis.';
+ tx(answerFn(id,me,ok),r=>{if(r.msg)say(r.msg);else if(r.ok){playFile('ok');say('✅ Benar! Soal '+id+' selesai.'+sisa,1)}else{playFile('no');say('❌ Belum tepat. Soal '+id+' dilepas dan bisa direbut temanmu.'+sisa)}})}
 
 function cells(){IDS.forEach(id=>{const e=$('c-'+id);if(!e)return;const q=S.q[id]||{};let c='c',m='';
  if(q.sol){c+=' sol';m='✓ '+nm(q.sol)}else if(q.by){c+=q.by===me?' me':' tk';m=q.by===me?'kamu':'🔒 '+nm(q.by)}
  else if(q.x&&q.x[me]){c+=' no';m='⛔'}else if(q.w){c+=' st';m='🔥 rebut'}
  e.className=c;e.querySelector('i').textContent=m})}
-function mePanel(){const id=S.cur[me],n=doneOf(S,me),k=id+'|'+n;
- const d=$('dots');if(d)d.innerHTML=Array.from({length:TARGET},(_,i)=>`<span class="${i<n?'on':''}"></span>`).join('');
+function mePanel(){const id=S.cur[me],n=doneOf(S,me),u=usedOf(S,me),k=id+'|'+n+'|'+u;
+ const d=$('dots');if(d)d.innerHTML=Array.from({length:TARGET},(_,i)=>`<span class="${i<n?'on':i<u?'bad':''}"></span>`).join('');
  if(k===pk)return;pk=k;const P=$('panel');
- if(n>=TARGET){P.innerHTML=`<div class="box ok">🎉 Hebat, ${nm(me)}! Kamu sudah menyelesaikan ${TARGET} soal evaluasi.</div>`;return}
+ if(u>=TARGET&&!id){P.innerHTML=`<div class="box ok">🏁 ${nm(me)}, ketiga kesempatanmu sudah terpakai. Soal benar: ${n} dari ${TARGET}. Terima kasih sudah mengerjakan!</div>`;return}
  if(!id){P.innerHTML=`<div class="box">Pilih sisi lalu ketuk kotak, atau ketik kode soal (contoh <b>A7</b>).<div class="row" style="margin-top:8px"><input id="code" maxlength="2" placeholder="A7" style="width:90px;text-transform:uppercase"><button class="cy" id="go">Pilih soal</button></div>
-  <p class="meta">Soal selesai: ${n} dari ${TARGET}. Kerjakan satu per satu.</p></div>`;
+  <p class="meta">Sisa kesempatan: <b>${TARGET-u}</b> dari ${TARGET} (soal benar: ${n}). Setiap jawaban yang dikirim, benar atau salah, memakai 1 kesempatan. Kerjakan satu per satu.</p></div>`;
   $('go').onclick=()=>pick($('code').value);$('code').onkeydown=e=>{if(e.key==='Enter')pick($('code').value)};return}
  P.innerHTML=`<div class="box"><b>Soal ${id}</b><div class="qt">${fx(Q[id].t)}</div><div class="row"><input id="ans" placeholder="Jawabanmu" autocomplete="off" inputmode="text" style="flex:1;min-width:140px"><button class="g" id="sub">Kirim</button><button class="ghost" id="rel">Lepas soal</button></div>
-  <p class="meta">Tulis angka saja (contoh 30, 0,7, atau pecahan 2/15). Pecahan tidak perlu disederhanakan.</p></div>`;
+  <p class="meta">Contoh jawaban: 30 &nbsp;·&nbsp; 0,7 &nbsp;·&nbsp; 2/15 &nbsp;·&nbsp; 45/100. Pecahan tidak perlu disederhanakan. Mengirim jawaban memakai 1 kesempatan; "Lepas soal" tidak memakai kesempatan.</p></div>`;
  $('sub').onclick=submit;$('ans').onkeydown=e=>{if(e.key==='Enter')submit()};$('ans').focus();
  $('rel').onclick=()=>tx(releaseFn(me),()=>say('Soal dilepas.'))}
 function guruPanel(){const g=$('gr');if(!g)return;const solved=Object.values(S.q).filter(x=>x.sol).length;
- const wr=sid=>Object.values(S.q).filter(x=>x.x&&x.x[sid]).length;
- const sk=sid=>Math.max(0,doneOf(S,sid)*POIN_BENAR-wr(sid)*POTONGAN_SALAH);
+ const sk=sid=>Math.max(0,doneOf(S,sid)*POIN_BENAR-wrongOf(S,sid)*POTONGAN_SALAH);
  g.innerHTML=`<div class="panel"><b>Terselesaikan: ${solved}/54</b> <span class="meta">· ${online?'🟢 Online':'🔴 Offline'}</span>
- <table><tr><th>Murid</th><th>Selesai</th><th>Sedang dikerjakan</th><th>Skor</th><th></th></tr>${NAMES.map((n,i)=>{const s='s'+(i+1),c=S.cur[s],d=doneOf(S,s);
- return `<tr><td>${n}</td><td>${d>=TARGET?'✅ ':''}${d}/${TARGET}</td><td>${c||'–'}</td><td><b>${sk(s)}</b></td><td>${c?`<button class="ghost" data-r="${s}">Lepas</button>`:''}</td></tr>`}).join('')}</table></div>
+ <table><tr><th>Murid</th><th>Benar</th><th>Kesempatan terpakai</th><th>Sedang dikerjakan</th><th>Skor (maks ${fmt(TARGET*POIN_BENAR)})</th><th></th></tr>${NAMES.map((n,i)=>{const s='s'+(i+1),c=S.cur[s],d=doneOf(S,s),u=usedOf(S,s);
+ return `<tr><td>${n}</td><td>${d}</td><td>${u>=TARGET?'🏁 ':''}${u}/${TARGET}</td><td>${c||'–'}</td><td><b>${fmt(sk(s))}</b></td><td>${c?`<button class="ghost" data-r="${s}">Lepas</button>`:''}</td></tr>`}).join('')}</table></div>
  <div class="panel"><button class="rd" id="rs">Reset semua progres</button> <span class="meta">Menghapus semua jawaban dan kunci soal yang sudah dipilih.</span></div>
  <details class="panel"><summary><b>Kunci jawaban</b></summary><p class="meta">${QD.map(([id,t,a])=>`<b>${id}</b>: ${a[0]}`).join(' · ')}</p></details>`;
  g.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>tx(releaseFn(b.dataset.r)));
