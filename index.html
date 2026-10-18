@@ -159,7 +159,7 @@ function guruPanel(){const g=$('gr');if(!g)return;const solved=Object.values(S.q
  const wr=sid=>Object.values(S.q).filter(x=>x.x&&x.x[sid]).length;
  const sk=sid=>Math.max(0,doneOf(S,sid)*POIN_BENAR-wr(sid)*POTONGAN_SALAH);
  g.innerHTML=`<div class="panel"><b>Terselesaikan: ${solved}/54</b> <span class="meta">· ${online?'🟢 Online':'🔴 Offline'}</span>
- <table><tr><th>Murid</th><th>Selesai</th><th>Sedang dikerjakan</th><th>Skor (maks ${TARGET*POIN_BENAR})</th><th></th></tr>${NAMES.map((n,i)=>{const s='s'+(i+1),c=S.cur[s],d=doneOf(S,s);
+ <table><tr><th>Murid</th><th>Selesai</th><th>Sedang dikerjakan</th><th>Skor</th><th></th></tr>${NAMES.map((n,i)=>{const s='s'+(i+1),c=S.cur[s],d=doneOf(S,s);
  return `<tr><td>${n}</td><td>${d>=TARGET?'✅ ':''}${d}/${TARGET}</td><td>${c||'–'}</td><td><b>${sk(s)}</b></td><td>${c?`<button class="ghost" data-r="${s}">Lepas</button>`:''}</td></tr>`}).join('')}</table></div>
  <div class="panel"><button class="rd" id="rs">Reset semua progres</button> <span class="meta">Menghapus semua jawaban dan kunci soal yang sudah dipilih.</span></div>
  <details class="panel"><summary><b>Kunci jawaban</b></summary><p class="meta">${QD.map(([id,t,a])=>`<b>${id}</b>: ${a[0]}`).join(' · ')}</p></details>`;
